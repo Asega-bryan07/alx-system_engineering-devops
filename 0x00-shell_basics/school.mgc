@@ -1,2 +1,2 @@
 #!/bin/bash
-0 string SCHOOL School data!: mine School
+echo 'school' > 0 string SCHOOL School data!: mine School
