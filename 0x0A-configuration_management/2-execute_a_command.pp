@@ -5,6 +5,6 @@
 # Example:
 # Terminal #0 - starting my process
 exec { 'kill':
-command => 'pkill -f killmenow',
-path => ['/usr/bin', '/usr/bin']
+  command => 'pkill -f killmenow',
+  path    => ['/usr/bin', '/usr/bin']
 }
