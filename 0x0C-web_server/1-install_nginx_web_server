@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# Bash script that installs the nginx server and tests it
+
+apt-get update
+apt-get -y install nginx
+ufw allow 'Mginx HTTP'
+echo "Hello World!"
+service nginx start

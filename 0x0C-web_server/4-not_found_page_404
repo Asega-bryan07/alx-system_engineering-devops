@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# Configure your Nginx server to have a custom 404 page that contains the
+string Ceci n'est pas une page.
+# The page must contain the string Ceci n'est pas une page
+# Using what you did with 3-redirection, write 4-not_found_page_404 so that
+# it configures a brand new Ubuntu machine to the requirements asked in this task
+
+apt-get update
+apt-get -y install nginx
+echo "Hello World!" | sudo tee /var/www/html/index.html
+
+# code to redirect to a page specified eg www.asegabryan.com
+string_for_replacement = "server_name _;\n\trewrite ^\/redirect_me https:\/\/www.asegabryan.com permanent;"
+sudo sed -i "s/server_name _;/$string_for_replacement/" /etc/nginx/sites-enabled/default
+
+# code to create error page and redirect to error 404
+echo "" | sudo tee /var/www/html/404.html
+str_for_replacement  = "listen 80 default_server;\n\terror_page 404\/404.html;\n\tlocation= \/404.html {\n\t\troot \/var\/www\/html;\n\t\tinternal;\n\t}"
+sudo sed -i "s/listen 80 default_server;/$string_for_replacement" /etc/nginx/sites-enabled/default
+
+# REstart the server
+sudo service nginx restart
