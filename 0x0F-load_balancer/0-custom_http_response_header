@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+# configure web-02 to be identical to web-01. Fortunately, you built a Bash
+# cript during your web server project, and they’ll now come in handy to easily
+# configure web-02. Remember, always try to automate your work!
+# Since we’re placing our web servers behind a load balancer for this project,
+# we want to add a custom Nginx response header. The goal here is to be able
+# to track which web server is answering our HTTP requests, to understand and
+# track the way a load balancer works. More in the coming tasks.
+# Requirements:
+# Configure Nginx so that its HTTP response contains a custom header (on web-01 and web-02)
+# The name of the custom HTTP header must be X-Served-By
+# The value of the custom HTTP header must be the hostname of the server Nginx is running on
+# Write 0-custom_http_response_header so that it configures a brand new Ubuntu
+# machine to the requirements asked in this task
+# Ignore SC2154 for shellcheck
+sudo apt-get update
+sudo apt-get -y install nginx
+
+# configure firewall to allow a request to port 80
+sudo ufw allow 'Nginx HTTP'
+
+sudo mkdir -p /var/www/html
+
+# grant permissions
+sudo chmod -R 755 /var/www
+
+#  create an index.html page
+echo 'Hello World!' |sudo tee  /var/www/html/index.html
+
+# create error 404 webpage
+echo "Ceci n'est pas une page" |sudo tee /var/www/html/404.html
+
+# configure redirect for a single page, also add header to display hostname
+string_for_replacement="server_name _;\n\tadd_header X-Served-By \$hostname;\n\trewrite ^\/redirect_me https:\/\/www.asegabryan.tech permanent;"
+sudo sed -i "s/server_name _;/$string_for_replacement/" /etc/nginx/sites-enabled/default
+
+#configure redirect for 404 error page
+string_for_replacement="listen 80 default_server;\n\terror_page 404 \/404.html;\n\tlocation = \/404.html {\n\t\troot \/var\/www\/html;\n\t\tinternal;\n\t}"
+sudo sed -i "s/listen 80 default_server;/$string_for_replacement/" /etc/nginx/sites-enabled/default
+
+# after settings update, we restart the web server
+sudo service nginx restart
