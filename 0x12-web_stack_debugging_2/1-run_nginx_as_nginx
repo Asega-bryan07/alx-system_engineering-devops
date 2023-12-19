@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# fixes nginx to run as nginx user
+# nginx must be listening on all active IPs on port 8080
+
+# seting user in thte config file by replacing #user and its value
+sed -i "s/#user www-data/user nginx/" /etc/nginx/nginx.conf
+
+# replaces port 80 with port 808 in the sites-available config
+sed -i "s/80/8080/g" /etc/nginx/sites-available/default
+
+# grant permissions to the owner -wrx
+chmod 644 /etc/nginx/nginx.conf
+
+# kill an apache process if it may interfere with nginx
+pkill apache2
+
+# restart nginx service as a new user
+sudo -u nginx service nginx start
