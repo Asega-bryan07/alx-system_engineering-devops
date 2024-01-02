@@ -19,9 +19,8 @@ import requests
 from sys import argv
 
 if __name__ == "__main__":
-    employeeId = argv[1]
     baseUrl = "https://jsonplaceholder.typicode.com/users"
-    url = baseUrl + "/" + employeeId
+    url = baseUrl + "/"
 
     response = requests.get(url)
     users = response.json()
@@ -42,5 +41,5 @@ if __name__ == "__main__":
                 "completed": task.get('completed'),
                 "username": username})
 
-    with open('todo_all_employeed.json', 'w') as file:
-        json.dump(dictionary, file)
+    with open('todo_all_employeed.json', 'w') as filename:
+        json.dump(dictionary, filename)
